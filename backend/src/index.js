@@ -1,14 +1,25 @@
-const express  = requrie('express')
+const express  = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
-//dotenv 
-require('dotenv').config()
-
+require('dotenv').config({path: '../.env'});
 const app = express()
-let port = 3000
 
 
 app.use(express.json())
+app.use(cors())
+
+
+
+let port = process.env.PORT
+let mongoDBString = process.env.MONGODB_STRING
+
+mongoose.connect(mongoDBString)
+.then(()=> {
+    console.log("The mongoDB is connected")
+})
+.catch((error)=> {
+    console.log("The error message : " , error)
+})
 
 app.listen(port , () => {
     console.log(`The server is running on https://localhost:${port}`)
