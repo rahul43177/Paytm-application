@@ -2,14 +2,14 @@ const express  = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
 require('dotenv').config({path: '../.env'});
+const route = require('./route')
 const app = express()
 
 
 app.use(express.json())
 app.use(cors())
 
-
-
+app.use('/' , route)
 let port = process.env.PORT
 let mongoDBString = process.env.MONGODB_STRING
 
