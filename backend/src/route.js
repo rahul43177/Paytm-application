@@ -1,11 +1,12 @@
 const express = require('express')
 const router = express.Router()
 
-const {signUpUser ,login } = require('./controller/user-controller')
+const {registerUser ,login} = require('./controller/user-controller')
+const {authenticate,authorization } = require('./middlware/authMiddleware')
 
 //create new user
-router.post("/createUser" , signUpUser)
-router.post("/login" , login)
+router.post("/createUser" ,registerUser)
+router.post('/login' , authenticate ,authorization ,login) 
 
 
 module.exports = router
