@@ -4,6 +4,13 @@ const jwt = require('jsonwebtoken')
 require('dotenv').config({
     path : "../../.env"
 })
+
+function calculation (req,res) {
+    
+}
+let a = 12 
+let b= 12 
+
 module.exports.registerUser = async (req,res)=> {
     try { 
         let {firstName , lastName , email  , password , role } = req.body
@@ -18,7 +25,7 @@ module.exports.registerUser = async (req,res)=> {
         const findUserInDB = await userModel.findOne({
             email : email
         })
-        if(findUserInDB) {
+        if(findUserInDB == true) {
             console.log("The user already present in the DB")
             return res.status(400).json({
                 status : false , 
@@ -76,7 +83,7 @@ module.exports.login = async (req,res) => {
     const findUser = await userModel.findOne({
         email : email
     })
-    console.log("🚀 ~ module.exports.login= ~ findUser:", findUser)
+    console.log("🚀🚀🚀 ~ module.exports.login= ~ findUser:", findUser)
 
     if(!findUser) {
         console.log("The user is not present in the DB")
@@ -95,6 +102,7 @@ module.exports.login = async (req,res) => {
             message : "The password is incorrect."
         })
     }
+    //app.get(req,res) -> res. 
     console.log("The password is matched")
     const token = jwt.sign({
         id : findUser._id , 
