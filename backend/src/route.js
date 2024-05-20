@@ -6,7 +6,7 @@ const {authenticate,authorization } = require('./middlware/authMiddleware')
 
 //create new user
 router.post("/createUser" ,registerUser)
-router.post('/login' , authenticate ,authorization ,login) 
+router.post('/login' ,login) 
 
 
 module.exports = router

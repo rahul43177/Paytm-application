@@ -1,6 +1,33 @@
 import React, { useState } from "react";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 export const LoginComponent = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post(`http://localhost:3000/login`, {
+        email: username,
+        password,
+      });
+
+      if (response.status === 200) {
+        toast.success("Login successful");
+      } else {
+        toast.error(`Login Failed : ${response.data.message}`);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        `Login Failed: ${
+          error.response ? error.response.data.message : error.message
+        }`
+      );
+    }
+  };
+
   return (
     <>
       <div className="flex items-center justify-center">
@@ -9,34 +36,97 @@ export const LoginComponent = () => {
 
       <div className="flex flex-col items-center justify-center p-3">
         {/* This is for input box for login page */}
-        <input type="text" placeholder="Email / Username" className="border-sm rounded text-center shadow-sm m-1 w-1/5"/>
-        <input type="password" placeholder="Password" className="border-sm rounded text-center shadow-sm m-1 w-1/5" />
+        <input
+          type="text"
+          placeholder="Email / Username"
+          className="border-sm rounded text-center shadow-sm m-1 w-1/5"
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          className="border-sm rounded text-center shadow-sm m-1 w-1/5"
+          onChange={(e) => setPassword(e.target.value)}
+        />
       </div>
 
       <div className="flex flex-col justify-center items-center ">
-        <button className="bg-blue-500 border-sm rounded m-0.5 p-1 font-bold text-white">Sign In</button>
+        <button
+          className="bg-blue-500 border-sm rounded m-0.5 p-1 font-bold text-white"
+          onClick={handleLogin}
+        >
+          Sign In
+        </button>
       </div>
-    
     </>
   );
 };
 
 export const RegistrationComponent = () => {
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleRegistration = async () => {
+    try {
+        let response = await axios.post(`http://localhost:3000/createUser` ,{
+            firstName : firstname,
+            lastName : lastname , 
+            email : username , 
+            password
+        })
+        if(response.status == 200) {
+            console.log("The user is registerd successfully")
+            toast.success(`The registration : ${response.message}`)
+        }
+
+    } catch(error) {
+        console.error(error.message)
+        toast.error(`The error is : ${error}`)
+    }
+  }
+
   return (
     <>
       <div className="flex items-center justify-center">
         <h3 className="text-4xl font-bold text-green-500">Registration</h3>
       </div>
       <div className="flex flex-col items-center justify-center p-3">
-        {/* This is for input box for login page */}
-        <input type="text" placeholder="First Name" className="border-sm rounded text-center shadow-sm m-1 w-1/5"/>
-        <input type="text" placeholder="Last Name" className="border-sm rounded text-center shadow-sm m-1 w-1/5" />
-        <input type="text" placeholder="Email Address" className="border-sm rounded text-center shadow-sm m-1 w-1/5" />
-        <input type="password" placeholder="Password" className="border-sm rounded text-center shadow-sm m-1 w-1/5" />
+        {/* This is for input box for registration page */}
+        <input
+          type="text"
+          placeholder="First Name"
+          className="border-sm rounded text-center shadow-sm m-1 w-1/5"
+          onChange={(e) => setFirstname(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Last Name"
+          className="border-sm rounded text-center shadow-sm m-1 w-1/5"
+          onChange={(e) => setLastname(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Email Address"
+          className="border-sm rounded text-center shadow-sm m-1 w-1/5"
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          className="border-sm rounded text-center shadow-sm m-1 w-1/5"
+          onChange={(e) => setPassword(e.target.value)}
+        />
       </div>
 
       <div className="flex flex-col justify-center items-center">
-        <button className="bg-green-500 border-sm rounded m-0.5 p-1 font-bold text-white">Sign Up</button>
+        <button
+          className="bg-green-500 border-sm rounded m-0.5 p-1 font-bold text-white"
+          onClick={handleRegistration}
+        >
+          Sign Up
+        </button>
       </div>
     </>
   );

@@ -5,12 +5,6 @@ require('dotenv').config({
     path : "../../.env"
 })
 
-function calculation (req,res) {
-    
-}
-let a = 12 
-let b= 12 
-
 module.exports.registerUser = async (req,res)=> {
     try { 
         let {firstName , lastName , email  , password , role } = req.body
@@ -56,7 +50,7 @@ module.exports.registerUser = async (req,res)=> {
 
         res.cookie('token' , token , {httpOnly : true})
         res.status(201).json({
-            status : false , 
+            status : true , 
             message : "User Registed successfully" ,
             token
         })
