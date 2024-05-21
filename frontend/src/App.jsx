@@ -2,14 +2,23 @@
 import React from "react";
 import { LoginRegistrationComponent } from "./components/Registration_login";
 import {ToastContainer} from 'react-toastify'
+import {HomeComponent} from './components/HomeComponent'
+import {BrowserRouter as Router , Routes , Route} from 'react-router-dom'
 import "./index.css"; // Import your Tailwind CSS
 
 function App() {
   return (
-    <div className="App">
-      <LoginRegistrationComponent />
+    <Router>
+      <Routes>
+        <Route path = '/' element = {<LoginRegistrationComponent/>}/>
+        <Route path = '/home'  element = {<HomeComponent/>}/>
+      </Routes>
       <ToastContainer/>
-    </div>
+    </Router>
+    // <div className="App">
+    //   <LoginRegistrationComponent />
+    //   <ToastContainer/>
+    // </div>
   );
 }
 

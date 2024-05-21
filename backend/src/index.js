@@ -15,9 +15,7 @@ app.use(cookieParser())
 
 app.use('/' , route)
 let port = process.env.PORT
-console.log("🚀 ~ port:", port)
 let mongoDBString = process.env.MONGODB_STRING
-console.log("🚀 ~ mongoDBString:", mongoDBString)
 
 mongoose.connect(mongoDBString)
 .then(()=> {
@@ -28,6 +26,5 @@ mongoose.connect(mongoDBString)
 })
 
 app.listen(port , () => {
-    console.log("🚀 ~ app.listen ~ port:", port)
     console.log(`The server is running on https://localhost:${port}`)
 })

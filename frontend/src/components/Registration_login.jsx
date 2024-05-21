@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import {useNavigate} from 'react-router-dom'
 export const LoginComponent = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate()
 
   const handleLogin = async () => {
     try {
@@ -15,6 +17,7 @@ export const LoginComponent = () => {
 
       if (response.status === 200) {
         toast.success("Login successful");
+        navigate('/home')
       } else {
         toast.error(`Login Failed : ${response.data.message}`);
       }
