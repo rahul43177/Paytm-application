@@ -191,3 +191,31 @@ module.exports.authCheck = async (req, res) => {
       });
     }
   };
+
+
+module.exports.loginCheck = async (req,res) => {
+    try {
+        if(req.user) {
+            return res.status(200).json({
+                status : true , 
+                loggedIn : true ,
+                message : "Welcome"
+            })
+        }
+        else {
+            return res.status(200).json({
+                status : false , 
+                loggedIn : false ,
+                message : "The user is not allowed"
+            })
+        }
+    } catch(error) {
+        conosle.log("erorr" , error)
+        conosle.log("erorr message" , error.message)
+        res.status(500).json({
+            status : false , 
+            error
+        })
+    }
+
+}
