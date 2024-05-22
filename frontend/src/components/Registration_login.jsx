@@ -3,20 +3,24 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import {useNavigate} from 'react-router-dom'
-export const LoginComponent = () => {
+export const LoginComponent = ({setIsLoggedIn}) => {
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate()
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post(`http://localhost:3000/login`, {
+      const response = await axios.post(`http://localhost:3030/login`, {
         email: username,
         password,
+      },{
+        withCredentials : true
       });
 
       if (response.status === 200) {
         toast.success("Login successful");
+        setIsLoggedIn(true)
         navigate('/home')
       } else {
         toast.error(`Login Failed : ${response.data.message}`);
@@ -73,7 +77,7 @@ export const RegistrationComponent = () => {
 
   const handleRegistration = async () => {
     try {
-        let response = await axios.post(`http://localhost:3000/createUser` ,{
+        let response = await axios.post(`http://localhost:3030/createUser` ,{
             firstName : firstname,
             lastName : lastname , 
             email : username , 
@@ -135,7 +139,9 @@ export const RegistrationComponent = () => {
   );
 };
 
-export const LoginRegistrationComponent = () => {
+export const LoginRegistrationComponent = ({
+  setIsLoggedIn
+}) => {
   const [activeTab, setActiveTab] = useState("login");
 
   return (
@@ -164,7 +170,7 @@ export const LoginRegistrationComponent = () => {
         </button>
       </div>
       <div>
-        {activeTab == "login" ? <LoginComponent /> : <RegistrationComponent />}
+        {activeTab == "login" ? <LoginComponent setIsLoggedIn={setIsLoggedIn}/> : <RegistrationComponent />}
       </div>
     </>
   );

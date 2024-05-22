@@ -132,3 +132,34 @@ module.exports.logout = async (req,res) => {
         message : "Logged out successfully."
     })
 }
+
+
+module.exports.loginCheck = async (req,res) => {
+    try {
+        console.log("inside the loginCheck")
+        console.log("req.user- " , req.user)
+        if(req.user) {
+            console.log(`user details -> ${req.user} `)
+            return res.status(200).json({
+                status : true , 
+                loggedIn : true ,
+                message : "Welcome"
+            })
+        }
+        else {
+            return res.status(200).json({
+                status : false , 
+                loggedIn : false ,
+                message : "The user is not allowed"
+            })
+        }
+    } catch(error) {
+        conosle.log("erorr" , error)
+        conosle.log("erorr message" , error.message)
+        res.status(500).json({
+            status : false , 
+            error
+        })
+    }
+
+}

@@ -1,17 +1,44 @@
 // src/App.jsx
-import React from "react";
-import { LoginRegistrationComponent } from "./components/Registration_login";
+import React , {useEffect , useState} from "react";
+import { LoginRegistrationComponent  } from "./components/Registration_login";
 import {ToastContainer} from 'react-toastify'
 import {HomeComponent} from './components/HomeComponent'
-import {BrowserRouter as Router , Routes , Route} from 'react-router-dom'
+import {BrowserRouter as Router , Routes , Route , Navigate} from 'react-router-dom'
 import "./index.css"; // Import your Tailwind CSS
+import axios from 'axios'
 
 function App() {
+
+  const [isLoggedIn , setIsLoggedIn] = useState(false)  
+  const [isLoading , setIsLoading ] = useState(true)
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3030/loginCheck` , {withCredentials : true})
+        console.table("login check API",response)
+        console.log(response.data.loggedIn)
+        setIsLoggedIn(response.data.loggedIn)
+      } catch(error) {
+        setIsLoggedIn(false)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    checkLoginStatus()
+  },[])
+
+
+  if(isLoading) {
+    return <div>Loading....</div>
+  }
+
   return (
     <Router>
       <Routes>
-        <Route path = '/' element = {<LoginRegistrationComponent/>}/>
-        <Route path = '/home'  element = {<HomeComponent/>}/>
+        <Route path='/' element = {isLoggedIn ? <Navigate to='/home' /> : <LoginRegistrationComponent setIsLoggedIn = {setIsLoggedIn}/>}/>
+        <Route path='/home' element={isLoggedIn ? <HomeComponent /> : <Navigate to='/' />} />
+        {console.log(isLoggedIn)}
       </Routes>
       <ToastContainer/>
     </Router>

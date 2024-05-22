@@ -9,7 +9,12 @@ const cookieParser = require('cookie-parser')
 
 
 app.use(express.json())
-app.use(cors())
+const allowedOrigins = ['http://localhost:5173']; // Add your frontend's origin here
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true // This allows the server to accept credentials (cookies, etc.) from the client
+}));
 app.use(cookieParser())
 
 
