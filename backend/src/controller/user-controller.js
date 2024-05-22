@@ -134,68 +134,12 @@ module.exports.logout = async (req,res) => {
 }
 
 
-module.exports.authCheck = async (req, res) => {
-    const { email } = req.body;
-  
-    try {
-      // Find the user by email
-      const findUser = await userModel.findOne({ email: email });
-      if (!findUser) {
-        return res.status(400).json({
-          status: false,
-          message: "The user does not exist",
-        });
-      }
-  
-      // Extract token from cookies
-      const token = req.cookies.token;
-      if (!token) {
-        return res.status(401).json({
-          status: false,
-          message: "No token provided",
-        });
-      }
-  
-      // Verify the token
-      let decodedToken;
-      try {
-        decodedToken = jwt.verify(token, process.env.JWT_SECRETCODE);
-      } catch (error) {
-        return res.status(401).json({
-          status: false,
-          message: "Invalid or expired token",
-        });
-      }
-  
-      // Attach the decoded token to the request object
-      req.user = decodedToken;
-  
-      // Check if the logged-in user ID matches the token's user ID
-      if (String(findUser._id) !== String(decodedToken.id)) {
-        return res.status(403).json({
-          status: false,
-          message: "Not authorized",
-        });
-      }
-  
-      return res.status(200).json({
-        status: true,
-        message: "Authorized",
-      });
-  
-    } catch (error) {
-      console.error("Error during authentication check:", error);
-      return res.status(500).json({
-        status: false,
-        message: "Internal server error",
-      });
-    }
-  };
-
-
 module.exports.loginCheck = async (req,res) => {
     try {
+        console.log("inside the loginCheck")
+        console.log("req.user- " , req.user)
         if(req.user) {
+            console.log(`user details -> ${req.user} `)
             return res.status(200).json({
                 status : true , 
                 loggedIn : true ,

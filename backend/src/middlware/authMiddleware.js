@@ -23,7 +23,7 @@ module.exports.authenticate = (req, res, next) => {
     req.user = decodedToken;
     next();
   } catch (error) {
-    res.staus(500).json({
+    res.status(500).json({
       status: false,
       error: error,
       errorMessage: error.message,
