@@ -19,7 +19,7 @@ module.exports.registerUser = async (req,res)=> {
         const findUserInDB = await userModel.findOne({
             email : email
         })
-        if(findUserInDB == true) {
+        if(findUserInDB) {
             console.log("The user already present in the DB")
             return res.status(400).json({
                 status : false , 
