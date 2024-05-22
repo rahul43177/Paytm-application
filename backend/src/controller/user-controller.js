@@ -100,7 +100,8 @@ module.exports.login = async (req,res) => {
     console.log("The password is matched")
     const token = jwt.sign({
         id : findUser._id , 
-        role : findUser.role
+        role : findUser.role ,
+        email : findUser.email
     },
     process.env.JWT_SECRETCODE ,
     {
@@ -139,11 +140,13 @@ module.exports.loginCheck = async (req,res) => {
         console.log("inside the loginCheck")
         console.log("req.user- " , req.user)
         if(req.user) {
+            let userData = req.user
             console.log(`user details -> ${req.user} `)
             return res.status(200).json({
                 status : true , 
                 loggedIn : true ,
-                message : "Welcome"
+                message : "Welcome" , 
+                userData : userData
             })
         }
         else {
@@ -161,5 +164,60 @@ module.exports.loginCheck = async (req,res) => {
             error
         })
     }
+}
 
+module.exports.changeThePassword = async (req,res) => {
+    try {
+        const {email , oldPassword , newPassword} = req.body
+        if(!(email && oldPassword && newPassword)) {
+            console.log("Both the things not given")
+            return res.status(400).json({
+                status : false ,
+                message : "Please enter both the mandatory fields."
+            })
+        }
+
+        const findUser = await userModel.findOne({
+            email : email
+        })
+        console.log("🚀🚀🚀 ~ module.exports.login= ~ findUser:", findUser)
+    
+        if(!findUser) {
+            console.log("The user is not present in the DB")
+            return res.status(400).json({
+                status : false , 
+                message : "The user is not present in the Database."
+            })
+        }
+    
+        //check the password
+        const isMatch = await bcrypt.compare(oldPassword , findUser.password)
+        if(!isMatch) {
+            console.log("The old password enetered is wrong")
+            return res.status(403).json({
+                status : false , 
+                message : "The old password provided is incorrect."
+            })
+        }
+
+        const updateThePassword = await userModel.findOneAndUpdate(
+            {email : email } , 
+            {password : await bcrypt.hash(newPassword , 10)} ,
+            {new : true }
+        )
+
+        console.log('updateThePassword' , updateThePassword)
+        return res.status(200).json({
+            status : true , 
+            message : "The password is updated successfully." ,
+            updatedValue : updateThePassword
+        })
+
+    } catch(error) {
+        return res.status(500).json({
+            status : false, 
+            error : error , 
+            errorMessage : error.message
+        })
+    }
 }

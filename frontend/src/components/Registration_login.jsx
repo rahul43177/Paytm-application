@@ -46,13 +46,13 @@ export const LoginComponent = ({setIsLoggedIn}) => {
         <input
           type="text"
           placeholder="Email / Username"
-          className="border-sm rounded text-center shadow-sm m-1 w-1/5"
+          className="border rounded text-center shadow-sm m-1 w-1/5"
           onChange={(e) => setUsername(e.target.value)}
         />
         <input
           type="password"
           placeholder="Password"
-          className="border-sm rounded text-center shadow-sm m-1 w-1/5"
+          className="border rounded text-center shadow-sm m-1 w-1/5"
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
@@ -104,25 +104,25 @@ export const RegistrationComponent = () => {
         <input
           type="text"
           placeholder="First Name"
-          className="border-sm rounded text-center shadow-sm m-1 w-1/5"
+          className="border rounded text-center shadow-sm m-1 w-1/5"
           onChange={(e) => setFirstname(e.target.value)}
         />
         <input
           type="text"
           placeholder="Last Name"
-          className="border-sm rounded text-center shadow-sm m-1 w-1/5"
+          className="border rounded text-center shadow-sm m-1 w-1/5"
           onChange={(e) => setLastname(e.target.value)}
         />
         <input
           type="text"
           placeholder="Email Address"
-          className="border-sm rounded text-center shadow-sm m-1 w-1/5"
+          className="border rounded text-center shadow-sm m-1 w-1/5"
           onChange={(e) => setUsername(e.target.value)}
         />
         <input
           type="password"
           placeholder="Password"
-          className="border-sm rounded text-center shadow-sm m-1 w-1/5"
+          className="border rounded text-center shadow-sm m-1 w-1/5"
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
