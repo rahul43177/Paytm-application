@@ -4,7 +4,7 @@ export const HomeComponent = () => {
     const navigate = useNavigate()
     const handleLogout = async () => {
         try {
-            const response = await axios.get(`http://localhost:3030/logout` , {
+            const response = await axios.get(`http://localhost:3030/user/logout` , {
                 withCredentials : true
             })
             if(response.data.status ==true) {

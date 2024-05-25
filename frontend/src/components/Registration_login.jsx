@@ -11,7 +11,7 @@ export const LoginComponent = ({setIsLoggedIn}) => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post(`http://localhost:3030/login`, {
+      const response = await axios.post(`http://localhost:3030/user/login`, {
         email: username,
         password,
       },{
@@ -71,7 +71,7 @@ export const RegistrationComponent = () => {
 
   const handleRegistration = async () => {
     try {
-        let response = await axios.post(`http://localhost:3030/createUser` ,{
+        let response = await axios.post(`http://localhost:3030/user/createUser` ,{
             firstName : firstname,
             lastName : lastname , 
             email : username , 

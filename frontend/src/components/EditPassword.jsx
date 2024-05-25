@@ -15,7 +15,7 @@ export const EditPassword = () => {
 
     const handleEditPassword = async () => {
         try {
-            let response = await axios.put("http://localhost:3030/editPassword" , {
+            let response = await axios.put("http://localhost:3030/user/editPassword" , {
                 email : userEmail , 
                 oldPassword : oldPasswordText , 
                 newPassword : newPasswordText
