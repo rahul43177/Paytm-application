@@ -7,7 +7,7 @@ import {BrowserRouter as Router , Routes , Route , Navigate} from 'react-router-
 import "./index.css"; // Import your Tailwind CSS
 import axios from 'axios'
 import { EditPassword } from "./components/EditPassword";
-
+import {applicationPort} from '../config/config'
 function App() {
 
   const [isLoggedIn , setIsLoggedIn] = useState(false)  
@@ -16,7 +16,7 @@ function App() {
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
-        const response = await axios.get(`http://localhost:3030/loginCheck` , {withCredentials : true})
+        const response = await axios.get(`${applicationPort}/user/loginCheck` , {withCredentials : true})
         console.table("login check API",response)
         localStorage.setItem('email' , response.data.userData.email)
         localStorage.setItem('role' , response.data.userData.role) 

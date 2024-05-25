@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import {useNavigate} from 'react-router-dom'
+import {applicationPort} from '../../config/config'
 export const LoginComponent = ({setIsLoggedIn}) => {
 
   const [username, setUsername] = useState("");
@@ -11,7 +12,7 @@ export const LoginComponent = ({setIsLoggedIn}) => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post(`http://localhost:3030/login`, {
+      const response = await axios.post(`${applicationPort.port}/user/login`, {
         email: username,
         password,
       },{
@@ -77,7 +78,7 @@ export const RegistrationComponent = () => {
 
   const handleRegistration = async () => {
     try {
-        let response = await axios.post(`http://localhost:3030/createUser` ,{
+        let response = await axios.post(`${applicationPort}/user/createUser` ,{
             firstName : firstname,
             lastName : lastname , 
             email : username , 

@@ -3,7 +3,7 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import {useNavigate } from 'react-router-dom'
 import {useState} from 'react'
-
+import {applicationPort} from '../../config/config'
 
 
 
@@ -15,7 +15,7 @@ export const EditPassword = () => {
 
     const handleEditPassword = async () => {
         try {
-            let response = await axios.put("http://localhost:3030/editPassword" , {
+            let response = await axios.put(`${applicationPort}/user/editPassword` , {
                 email : userEmail , 
                 oldPassword : oldPasswordText , 
                 newPassword : newPasswordText
