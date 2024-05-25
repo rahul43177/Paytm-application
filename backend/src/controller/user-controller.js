@@ -221,3 +221,24 @@ module.exports.changeThePassword = async (req,res) => {
         })
     }
 }
+
+
+module.exports.listOfUsers = async (req,res)=> {
+    try {
+        const usersListData = await userModel.find()
+        let userDetails = usersListData.map((singleUserData) => ({
+            name : `${singleUserData.firstName} ${singleUserData.lastName}` ,
+            email : singleUserData.email
+        }))
+
+        return res.status(200).json({
+            status : true , 
+            data : userDetails
+        })
+    } catch(error) {
+        return res.status(500).json({
+            status : false , 
+            message : error
+        })
+    }
+} 
