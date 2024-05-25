@@ -2,7 +2,7 @@ const express  = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
 require('dotenv').config({path: '../.env'});
-const route = require('./route')
+const userRouter = require('./route')
 const app = express()
 const cookieParser = require('cookie-parser')
 
@@ -18,7 +18,7 @@ app.use(cors({
 app.use(cookieParser())
 
 
-app.use('/' , route)
+app.use('/user' , userRouter)
 let port = process.env.PORT
 let mongoDBString = process.env.MONGODB_STRING
 

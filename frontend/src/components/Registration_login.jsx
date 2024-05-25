@@ -11,7 +11,7 @@ export const LoginComponent = ({setIsLoggedIn}) => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post(`http://localhost:3030/login`, {
+      const response = await axios.post(`http://localhost:3030/user/login`, {
         email: username,
         password,
       },{
@@ -19,19 +19,13 @@ export const LoginComponent = ({setIsLoggedIn}) => {
       });
 
       if (response.status === 200) {
-        toast.success("Login successful");
+        toast.success(response.data.message);
         setIsLoggedIn(true)
         navigate('/home')
-      } else {
-        toast.error(`Login Failed : ${response.data.message}`);
       }
     } catch (error) {
       console.error(error);
-      toast.error(
-        `Login Failed: ${
-          error.response ? error.response.data.message : error.message
-        }`
-      );
+      toast.error(error.response.data.message);
     }
   };
 
@@ -77,20 +71,21 @@ export const RegistrationComponent = () => {
 
   const handleRegistration = async () => {
     try {
-        let response = await axios.post(`http://localhost:3030/createUser` ,{
+        let response = await axios.post(`http://localhost:3030/user/createUser` ,{
             firstName : firstname,
             lastName : lastname , 
             email : username , 
             password
         })
+        console.log(response.data.message )
         if(response.status == 200) {
             console.log("The user is registerd successfully")
             toast.success(`The registration : ${response.message}`)
         }
-
     } catch(error) {
-        console.error(error.message)
-        toast.error(`The error is : ${error}`)
+        console.error(error)
+        console.log(error.message)
+        toast.error(error.response.data.message)
     }
   }
 
