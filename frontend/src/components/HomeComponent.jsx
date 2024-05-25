@@ -54,11 +54,11 @@ export const HomeComponent = () => {
             </div>
             
             <button 
-                className='className="text-center font-bold bg-white p-1 rounded m-1'
+                className='className="text-center font-bold bg-white p-1 rounded m-1 border-2 border-rose-500'
                 onClick={handleEditPassword}
                 >Edit Profile</button>
             <button 
-                className="text-center font-bold bg-white p-1 rounded"
+                className="text-center font-bold bg-white p-1 rounded border-2 border-rose-500"
                 onClick={handleLogout}    
                 >Logout</button>
         </div>
