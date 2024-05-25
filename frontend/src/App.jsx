@@ -17,12 +17,8 @@ function App() {
     const checkLoginStatus = async () => {
       try {
         const response = await axios.get(`http://localhost:3030/loginCheck` , {withCredentials : true})
-        console.table("login check API",response)
         localStorage.setItem('email' , response.data.userData.email)
         localStorage.setItem('role' , response.data.userData.role) 
-        console.log(response.data.userData.email)
-        console.log(response.data.userData.role)
-        console.log(response.data.loggedIn)
         setIsLoggedIn(response.data.loggedIn)
       } catch(error) {
         setIsLoggedIn(false)

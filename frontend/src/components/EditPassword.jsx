@@ -28,13 +28,12 @@ export const EditPassword = () => {
             console.log(response)
             if(response.data.status == true) {
                 toast.success(response.data.message)
-            } else {
-                toast.error(response.data.message)
-                console.log(response.data.message)
-                console.log("inside else")
-            }
+                setTimeout(()=> {
+                    navigate('/home')
+                },3*1000)
+            } 
         } catch(error) {
-            toast.error(error)
+            toast.error(error.response.data.message)
         }
     }
     const handleBackButton = () => {
