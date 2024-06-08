@@ -4,6 +4,10 @@ import { useNavigate } from "react-router-dom";
 export const HomeComponent = () => {
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
+const userName = localStorage.getItem("name");
+console.log("🚀 ~ HomeComponent ~ userName:", userName)
+const userEmail = localStorage.getItem("email")
+  console.log("🚀 ~ HomeComponent ~ userEmail:", userEmail)
   const handleLogout = async () => {
     try {
       const response = await axios.get(`http://localhost:3030/user/logout`, {
@@ -27,7 +31,13 @@ export const HomeComponent = () => {
     const getUsersList = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3030/user/usersList"
+          "http://localhost:3030/user/usersList" , 
+          {
+            loggedInUser : userEmail 
+          } ,
+          {
+            withCredentials : true
+          }
         );
         console.log(response);
         setUsers(response.data.userData);
@@ -39,9 +49,8 @@ export const HomeComponent = () => {
     };
     getUsersList();
   }, []);
-
+  
   console.log("users ----> ", users);
-
   return (
     <>
       <div className="flex items-center justify-between p-4">
@@ -53,9 +62,13 @@ export const HomeComponent = () => {
             CUTIE PAY
           </h1>
         </div>
-
+        <div>
+          <h1 className="bg-gradient-to-r from-blue-400 to-purple-500 text-white font-bold text-center text-2xl p-4 rounded-lg shadow-md">
+            Welcome, <span className="text-white">{userName}</span>
+          </h1>
+        </div>
         <button
-          className='className="text-center font-bold bg-white p-1 rounded m-1 border-2 border-blue-500'
+          className="text-center font-bold bg-white p-1 rounded m-1 border-2 border-blue-500"
           onClick={handleEditPassword}
         >
           Edit Profile
@@ -68,26 +81,28 @@ export const HomeComponent = () => {
         </button>
       </div>
       <div className="flex flex-col items-center justify-center p-4">
-      <h1 className="font-bold text-2xl mb-4 text-white bg-black">List of Users</h1>
-      <ul className="w-full max-w-2xl bg-gray-100 rounded-lg shadow-lg">
-        {users.map((user) => (
-          <li
-            key={user.email}
-            className="flex items-center justify-between p-4 m-2 border-b bg-white rounded-md hover:bg-gray-200 transition duration-300"
-          >
-            <div className="flex-1 text-center text-blue-500 font-bold">
-              {user.name}
-            </div>
-            <div className="flex-1 text-center text-red-700 font-semibold">
-              {user.email}
-            </div>
-            <button className="flex-1 text-center bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition duration-300">
-              Pay
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div>
+        <h1 className="font-bold text-2xl mb-4 text-white bg-black">
+          List of Users
+        </h1>
+        <ul className="w-full max-w-2xl bg-gray-100 rounded-lg shadow-lg">
+          {users.map((user) => (
+            <li
+              key={user._id}
+              className="flex items-center justify-between p-4 m-2 border-b bg-white rounded-md hover:bg-grey-200 transition duration-300"
+            >
+              <div className="flex-1 text-center text-blue-500 font-bold">
+                {`${user.firstName} ${user.lastName}`}
+              </div>
+              <div className="flex-1 text-center text-red-700 font-semibold">
+                {user.email}
+              </div>
+              <button className="flex-1 text-center bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-green-600 hover:font-bold transition duration-300">
+                Pay
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </>
   );
 };

@@ -7,7 +7,7 @@ const {
   logout,
   loginCheck,
   changeThePassword,
-  listOfUsersWithBalance,
+  listOfUsers,
 } = require("../controller/user-controller");
 const { authenticate, authorization } = require("../middlware/authMiddleware");
 
@@ -17,6 +17,6 @@ router.post("/login", login);
 router.get("/loginCheck", authenticate, loginCheck);
 router.get("/logout", logout);
 router.put("/editPassword", changeThePassword);
-router.get("/usersList", listOfUsersWithBalance);
+router.get("/usersList", listOfUsers);
 
 module.exports = router;

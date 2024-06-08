@@ -10,6 +10,6 @@ router.post('/login' ,login)
 router.get('/loginCheck' , authenticate ,  loginCheck)
 router.get('/logout' , logout)
 router.put('/editPassword' , changeThePassword)
-router.get('/usersList' , listOfUsers)
+router.post('/usersList' , listOfUsers)
 
 module.exports = router
