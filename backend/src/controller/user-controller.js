@@ -1,4 +1,5 @@
 const userModel = require('../models/users')
+const Account = require('../models/account')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 require('dotenv').config({
@@ -7,7 +8,7 @@ require('dotenv').config({
 
 module.exports.registerUser = async (req,res)=> {
     try { 
-        let {firstName , lastName , email  , password , role } = req.body
+        let {firstName , lastName , email  , password , role , balance } = req.body
         console.log("🚀 ~ module.exports.registerUser= ~ role:", role)
         
         if(!(firstName && lastName && email && password)) {
@@ -45,10 +46,16 @@ module.exports.registerUser = async (req,res)=> {
         password = undefined;
 
         let createUser = await userModel.create(userDetials);
+        const userId = createUser._id
+        const balanceAdd =await Account.create({
+            user : userId , 
+            balance : balance
+        })
+
 
         let token = jwt.sign(
             {
-                id : createUser._id , 
+                id : userId, 
                 role : createUser.role
             } ,
             process.env.JWT_SECRETCODE
@@ -58,7 +65,8 @@ module.exports.registerUser = async (req,res)=> {
         res.status(201).json({
             status : true , 
             message : "User Registed successfully" ,
-            token
+            token , 
+            balanceAdded : balance
         })
     } catch(error) {
         res.status(500).json({
@@ -231,22 +239,50 @@ module.exports.changeThePassword = async (req,res) => {
 }
 
 
-module.exports.listOfUsers = async (req,res)=> {
+module.exports.listOfUsersWithBalance = async (req,res) => {
     try {
-        const usersListData = await userModel.find()
-        let userDetails = usersListData.map((singleUserData) => ({
-            name : `${singleUserData.firstName} ${singleUserData.lastName}` ,
-            email : singleUserData.email
+        const users = await userModel.aggregate([
+            {
+                $lookup : {
+                    from : "accounts" , 
+                    localField : "_id" ,
+                    foreignField : "user" ,
+                    as : "account"
+                }
+            } ,
+            {
+                $project : {
+                    firstName : 1 ,
+                    lastName : 1 ,
+                    email : 1 , 
+                    balance : "$account.balance"
+                }
+            }
+        ]);
+        console.log("🚀 ~ module.exports.listOfUsersWithBalance= ~ users:", users)
+        const formattedUsers = users.map((user)=> ({
+            _id : user._id , 
+            name : `${user.firstName} ${user.lastName}` ,
+            email : user.email , 
+            balance : user.balance[0] ? user.balance[0] : 0
         }))
+        console.log("🚀 ~ formattedUsers ~ formattedUsers:", formattedUsers)
+       
+
 
         return res.status(200).json({
             status : true , 
-            data : userDetails
+            userData : formattedUsers
         })
+
+
+
+
     } catch(error) {
         return res.status(500).json({
-            status : false , 
-            message : error
+            status : false ,
+            error : error  ,
+            errorMessage : error.message
         })
     }
-} 
+}

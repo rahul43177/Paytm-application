@@ -28,8 +28,8 @@ export const HomeComponent = () => {
         const getUsersList = async () => {
             try {  
                 const response = await axios.get("http://localhost:3030/user/usersList")
-                console.log(response )
-                setUsers(response.data.data)
+                console.log(response)
+                setUsers(response.data.userData)
                 console.log("data for users set in the useState")
             } catch(error) {
                 console.log(error)
@@ -39,7 +39,7 @@ export const HomeComponent = () => {
     getUsersList()
     }, [])
 
-
+    console.log("users ----> " , users)
 
 
     return (
@@ -66,9 +66,9 @@ export const HomeComponent = () => {
                     <h1 className='font-bold text-2xl'>List of users</h1>
                     <ul>
                         {
-                            users.map((user) => {
+                            users.map((user)=> {
                                 return <li>
-                                    {`${user.name} - ${user.email}`}
+                                    {user.name} - {user.email}                      Balance : {user.balance}
                                 </li>
                             })
                         }

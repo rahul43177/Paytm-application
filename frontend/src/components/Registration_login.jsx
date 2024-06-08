@@ -70,6 +70,7 @@ export const RegistrationComponent = () => {
   const [lastname, setLastname] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [balance, setBalance] = useState("");
   const [role, setRole] = useState("users");
   
   const handleRegistration = async () => {
@@ -79,7 +80,8 @@ export const RegistrationComponent = () => {
             lastName : lastname , 
             email : username , 
             password ,
-            role
+            role ,
+            balance : Number(balance)
         })
         console.log(response.data.message )
         if(response.status == 200) {
@@ -119,7 +121,7 @@ export const RegistrationComponent = () => {
           onChange={(e) => setUsername(e.target.value)}
         />
         <select
-        className="border rounded text-center shadow-sm m-1 w-1/5"
+        className="border rounded text-center shadow-sm m-1 w-1/5 font-mono	"
         onChange={(e) => setRole(e.target.value)}
         >
           <option value={"users"}>User</option>
@@ -130,6 +132,12 @@ export const RegistrationComponent = () => {
           placeholder="Password"
           className="border rounded text-center shadow-sm m-1 w-1/5"
           onChange={(e) => setPassword(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Enter the balance"
+          className="border rounded text-center shadow-sm m-1 w-1/5"
+          onChange={(e) => setBalance(e.target.value)}
         />
       </div>
 
