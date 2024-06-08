@@ -126,6 +126,7 @@ export const RegistrationComponent = () => {
         >
           <option value={"users"}>User</option>
           <option value={"admin"}>Admin</option>
+          <option value={"superusers"}>Super User</option>
         </select>
         <input
           type="password"

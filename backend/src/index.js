@@ -7,7 +7,7 @@ const app = express();
 const cookieParser = require("cookie-parser");
 
 app.use(express.json());
-const allowedOrigins = ["http://localhost:5173"]; // Add your frontend's origin here
+const allowedOrigins = ["http://localhost:5173" , "http://localhost:5174" ]; // Add your frontend's origin here
 
 app.use(
   cors({
