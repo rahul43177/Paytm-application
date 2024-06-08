@@ -1,4 +1,5 @@
 const userModel = require('../models/users')
+const Account = require('../models/account')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 require('dotenv').config({
@@ -7,15 +8,23 @@ require('dotenv').config({
 
 module.exports.registerUser = async (req,res)=> {
     try { 
-        let {firstName , lastName , email  , password , role } = req.body
-        if(!(firstName && lastName && email && password)) {
+        let {firstName , lastName , email  , password , role , balance } = req.body
+        console.log("🚀 ~ module.exports.registerUser= ~ balance:", balance)
+        if(!(firstName && lastName && email && password && balance)) {
             console.log("All the required fields are not present")
             return res.status(400).json({
                 status : false , 
                 message : "Please enter all the required fields."
             })
         }
-
+        console.log("type of balance ----" , typeof balance )
+        console.log("type of balance convertion ----" , typeof Number(balance))
+        if(Number(balance) == NaN) {
+            return res.status(400).json({
+                status : false , 
+                message : "Please enter the valid Balance (Only numbers are allowed)"
+            })
+        }
         const findUserInDB = await userModel.findOne({
             email : email
         })
@@ -27,7 +36,10 @@ module.exports.registerUser = async (req,res)=> {
             })
         }
         const hashedPassword = await bcrypt.hash(password , 10)
-        
+        firstName = firstName.trim()
+        lastName = lastName.trim()
+        password = password.trim()
+        email = email.trim()
         let userDetials = {
             firstName , 
             lastName , 
@@ -35,24 +47,37 @@ module.exports.registerUser = async (req,res)=> {
             password : hashedPassword ,
             role
         }
+        console.log("🚀 ~ module.exports.registerUser= ~ userDetials.role:", userDetials.role)
 
         password = undefined;
 
         let createUser = await userModel.create(userDetials);
+        const userId = createUser._id
+        //creating the balance while creation of the user 
+        const balanceAdd =await Account.create({
+            user : userId , 
+            balance : balance
+        })
 
         let token = jwt.sign(
             {
                 id : createUser._id , 
-                role : createUser.role
+                role : createUser.role ,
+                email : createUser.email
             } ,
-            process.env.JWT_SECRETCODE
+            process.env.JWT_SECRETCODE , 
+            {
+                expiresIn : "1h"
+            }
         )
-
-        res.cookie('token' , token , {httpOnly : true})
+        console.log("tokeenennnnnn" , token)
+        // res.cookie('token' , token , {httpOnly : true})
+        await res.cookie('token' , token , {httpOnly : true})
         res.status(201).json({
             status : true , 
             message : "User Registed successfully" ,
-            token
+            token , 
+            balanceAdded : balance
         })
     } catch(error) {
         res.status(500).json({
@@ -108,12 +133,15 @@ module.exports.login = async (req,res) => {
         expiresIn : "1h"
     }
     )
-
+    
+    
     res.cookie('token' , token , {httpOnly : true})
     return res.status(200).json({
         status : false , 
         message : "The user is logged in successfully" ,
-        token
+        email , 
+        role : findUser.role ,
+        name : `${findUser.firstName} ${findUser.lastName}`
     })
 
     } catch(error) {
@@ -141,7 +169,7 @@ module.exports.loginCheck = async (req,res) => {
         console.log("req.user- " , req.user)
         if(req.user) {
             let userData = req.user
-            console.log(`user details -> ${req.user} `)
+            console.log("🚀 ~ module.exports.loginCheck= ~ userData:", userData)
             return res.status(200).json({
                 status : true , 
                 loggedIn : true ,
@@ -223,22 +251,26 @@ module.exports.changeThePassword = async (req,res) => {
 }
 
 
-module.exports.listOfUsers = async (req,res)=> {
+module.exports.listOfUsers = async (req,res) => {
     try {
-        const usersListData = await userModel.find()
-        let userDetails = usersListData.map((singleUserData) => ({
-            name : `${singleUserData.firstName} ${singleUserData.lastName}` ,
-            email : singleUserData.email
-        }))
-
+        
+        const {loggedInUser} = req.body
+        console.log("🚀 ~ module.exports.listOfUsers= ~ loggedInUser:", loggedInUser)
+       const users = await userModel.find({
+        email : {
+            $ne : loggedInUser
+        }
+       })
+        
         return res.status(200).json({
             status : true , 
-            data : userDetails
+            userData : users
         })
     } catch(error) {
         return res.status(500).json({
             status : false , 
-            message : error
+            error ,
+            errorMessage : error.message
         })
     }
-} 
+}

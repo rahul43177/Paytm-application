@@ -2,26 +2,32 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
-import {useNavigate} from 'react-router-dom'
-export const LoginComponent = ({setIsLoggedIn}) => {
-
+import { useNavigate } from "react-router-dom";
+export const LoginComponent = ({ setIsLoggedIn }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post(`http://localhost:3030/user/login`, {
-        email: username,
-        password,
-      },{
-        withCredentials : true
-      });
-
+      const response = await axios.post(
+        `http://localhost:3030/user/login`,
+        {
+          email: username,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("role -------", response);
       if (response.status === 200) {
         toast.success(response.data.message);
-        setIsLoggedIn(true)
-        navigate('/home')
+        setIsLoggedIn(true);
+        localStorage.setItem("email", response.data.email);
+        localStorage.setItem("role", response.data.role);
+        localStorage.setItem("name" , response.data.name)
+        navigate("/home");
       }
     } catch (error) {
       console.error(error);
@@ -63,31 +69,42 @@ export const LoginComponent = ({setIsLoggedIn}) => {
   );
 };
 
-export const RegistrationComponent = () => {
+export const RegistrationComponent = ({setIsLoggedIn}) => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [balance, setBalance] = useState("");
+  const [role, setRole] = useState("users");
+  const navigate = useNavigate();
 
   const handleRegistration = async () => {
     try {
-        let response = await axios.post(`http://localhost:3030/user/createUser` ,{
-            firstName : firstname,
-            lastName : lastname , 
-            email : username , 
-            password
-        })
-        console.log(response.data.message )
-        if(response.status == 200) {
-            console.log("The user is registerd successfully")
-            toast.success(`The registration : ${response.message}`)
-        }
-    } catch(error) {
-        console.error(error)
-        console.log(error.message)
-        toast.error(error.response.data.message)
+      let response = await axios.post(`http://localhost:3030/user/createUser`, {
+        firstName: firstname,
+        lastName: lastname,
+        email: username,
+        password,
+        role,
+        balance,
+      });
+      console.log(response.data.message);
+      console.log(response);
+      if (response.data.status == true) {
+        console.log("The user is registerd successfully");
+        toast.success(response.data.message);
+        setIsLoggedIn(true);
+        localStorage.setItem("email", username);
+        localStorage.setItem("role", role);
+        localStorage.setItem("name" , `${firstname} ${lastname}`)
+        navigate("/home");
+      }
+    } catch (error) {
+      console.error(error);
+      console.log(error.message);
+      toast.error(error.response.data.message);
     }
-  }
+  };
 
   return (
     <>
@@ -114,11 +131,25 @@ export const RegistrationComponent = () => {
           className="border rounded text-center shadow-sm m-1 w-1/5"
           onChange={(e) => setUsername(e.target.value)}
         />
+        <select
+          className="border rounded text-center shadow-sm m-1 w-1/5 font-mono	"
+          onChange={(e) => setRole(e.target.value)}
+        >
+          <option value={"users"}>User</option>
+          <option value={"admin"}>Admin</option>
+          <option value={"superusers"}>Super User</option>
+        </select>
         <input
           type="password"
           placeholder="Password"
           className="border rounded text-center shadow-sm m-1 w-1/5"
           onChange={(e) => setPassword(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Enter the balance"
+          className="border rounded text-center shadow-sm m-1 w-1/5"
+          onChange={(e) => setBalance(e.target.value)}
         />
       </div>
 
@@ -134,9 +165,7 @@ export const RegistrationComponent = () => {
   );
 };
 
-export const LoginRegistrationComponent = ({
-  setIsLoggedIn
-}) => {
+export const LoginRegistrationComponent = ({ setIsLoggedIn }) => {
   const [activeTab, setActiveTab] = useState("login");
 
   return (
@@ -165,7 +194,11 @@ export const LoginRegistrationComponent = ({
         </button>
       </div>
       <div>
-        {activeTab == "login" ? <LoginComponent setIsLoggedIn={setIsLoggedIn}/> : <RegistrationComponent />}
+        {activeTab == "login" ? (
+          <LoginComponent setIsLoggedIn={setIsLoggedIn} />
+        ) : (
+          <RegistrationComponent  setIsLoggedIn={setIsLoggedIn}/>
+        )}
       </div>
     </>
   );

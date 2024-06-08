@@ -20,7 +20,7 @@ function App() {
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
-        const response = await axios.get(`http://localhost:3030/loginCheck`, {
+        const response = await axios.get(`http://localhost:3030/user/loginCheck`, {
           withCredentials: true,
         });
         localStorage.setItem("email", response.data.userData.email);
