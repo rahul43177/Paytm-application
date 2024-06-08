@@ -8,6 +8,8 @@ require('dotenv').config({
 module.exports.registerUser = async (req,res)=> {
     try { 
         let {firstName , lastName , email  , password , role } = req.body
+        console.log("🚀 ~ module.exports.registerUser= ~ role:", role)
+        
         if(!(firstName && lastName && email && password)) {
             console.log("All the required fields are not present")
             return res.status(400).json({
@@ -27,7 +29,10 @@ module.exports.registerUser = async (req,res)=> {
             })
         }
         const hashedPassword = await bcrypt.hash(password , 10)
-        
+        firstName = firstName.trim()
+        lastName = lastName.trim()
+        password = password.trim()
+        email = email.trim()
         let userDetials = {
             firstName , 
             lastName , 
@@ -35,6 +40,7 @@ module.exports.registerUser = async (req,res)=> {
             password : hashedPassword ,
             role
         }
+        console.log("🚀 ~ module.exports.registerUser= ~ userDetials.role:", userDetials.role)
 
         password = undefined;
 
@@ -108,12 +114,14 @@ module.exports.login = async (req,res) => {
         expiresIn : "1h"
     }
     )
-
+    
+    
     res.cookie('token' , token , {httpOnly : true})
     return res.status(200).json({
         status : false , 
         message : "The user is logged in successfully" ,
-        token
+        email , 
+        role : findUser.role
     })
 
     } catch(error) {

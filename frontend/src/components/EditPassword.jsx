@@ -25,7 +25,7 @@ export const EditPassword = () => {
             }
         )
 
-            console.log(response)
+            console.log("role-----",response.data.role)
             if(response.data.status == true) {
                 toast.success(response.data.message)
                 setTimeout(()=> {

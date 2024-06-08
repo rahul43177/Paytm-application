@@ -17,10 +17,12 @@ export const LoginComponent = ({setIsLoggedIn}) => {
       },{
         withCredentials : true
       });
-
+      console.log("role -------", response)
       if (response.status === 200) {
         toast.success(response.data.message);
         setIsLoggedIn(true)
+        localStorage.setItem("email" , response.data.email)
+        localStorage.setItem("role" , response.data.role)
         navigate('/home')
       }
     } catch (error) {
@@ -68,14 +70,16 @@ export const RegistrationComponent = () => {
   const [lastname, setLastname] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
+  const [role, setRole] = useState("users");
+  
   const handleRegistration = async () => {
     try {
         let response = await axios.post(`http://localhost:3030/user/createUser` ,{
             firstName : firstname,
             lastName : lastname , 
             email : username , 
-            password
+            password ,
+            role
         })
         console.log(response.data.message )
         if(response.status == 200) {
@@ -114,6 +118,13 @@ export const RegistrationComponent = () => {
           className="border rounded text-center shadow-sm m-1 w-1/5"
           onChange={(e) => setUsername(e.target.value)}
         />
+        <select
+        className="border rounded text-center shadow-sm m-1 w-1/5"
+        onChange={(e) => setRole(e.target.value)}
+        >
+          <option value={"users"}>User</option>
+          <option value={"admin"}>Admin</option>
+        </select>
         <input
           type="password"
           placeholder="Password"
