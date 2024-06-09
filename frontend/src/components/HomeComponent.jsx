@@ -30,7 +30,8 @@ const userEmail = localStorage.getItem("email")
   useEffect(() => {
     const getUsersList = async () => {
       try {
-        const response = await axios.get(
+        console.log("email of user----" , userEmail)
+        const response = await axios.post(
           "http://localhost:3030/user/usersList" , 
           {
             loggedInUser : userEmail 
