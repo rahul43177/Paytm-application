@@ -57,13 +57,13 @@ const userEmail = localStorage.getItem("email")
         <div className="flex-1 flex justify-center">
           <h1
             className="bg-white font-bold text-center text-6xl text-blue-500"
-            style={{ marginRight: "-11.5rem" }}
+            style={{ marginRight: "-28.5rem" }}
           >
             CUTIE PAY
           </h1>
         </div>
         <div>
-          <h1 className="bg-gradient-to-r from-blue-400 to-purple-500 text-white font-bold text-center text-2xl p-4 rounded-lg shadow-md">
+          <h1 className="bg-gradient-to-r from-blue-400 to-purple-500 text-white font-bold text-center text-2xl p-1 rounded-lg shadow-md">
             Welcome, <span className="text-white">{userName}</span>
           </h1>
         </div>
