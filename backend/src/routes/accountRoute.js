@@ -1,8 +1,8 @@
 const express = require('express')
-const { balanceOfTheUser } = require('../controller/transaction-controller')
+const { balanceOfTheUser, updateFunds } = require('../controller/transaction-controller')
 const router = express.Router()
 
 router.post("/getBalance" , balanceOfTheUser)
-
+router.put('/addFunds' , updateFunds) 
 
 module.exports = router

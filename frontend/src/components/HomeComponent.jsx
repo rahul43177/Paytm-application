@@ -2,8 +2,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import Modal from "react-modal";
 import "react-toastify/dist/ReactToastify.css";
+import Modal from "react-modal";
 
 Modal.setAppElement("#root");
 
@@ -16,6 +16,7 @@ export const HomeComponent = () => {
   const userEmail = localStorage.getItem("email");
   const [amount , setAmount ] = useState("")
   const [balance , setBalance] = useState(0)
+  const [selectedUser , setSelectedUser] = useState("")
   const handleLogout = async () => {
     try {
       const response = await axios.get(`http://localhost:3030/user/logout`, {
@@ -40,9 +41,21 @@ export const HomeComponent = () => {
   const handleEditProfile = () => {
     setEditProfileModalOpen(true)
   }
-  const handlePay = async (from , to , amount) => {
+  const handlePay = async (amount , to ) => {
     try { 
-      let response = await axios.post('http://localhost:3030/transfer/transaction')
+      let paymentResponse = await axios.post(
+        'http://localhost:3030/transfer/transaction' , 
+        {
+          amount , to , 
+          from : userEmail
+        }
+      
+       )  
+
+       console.log(paymentResponse)
+       if(paymentResponse.status = 200) toast.success(paymentResponse.data.message)
+       else toast.error(error.response.data.error)
+
     } catch(error) {
       console.log("error ----" , error)
     }
@@ -65,7 +78,7 @@ export const HomeComponent = () => {
     }
 
     getBalance()
-  },[])
+  },[userEmail])
 
 
 
@@ -88,9 +101,12 @@ export const HomeComponent = () => {
       }
     };
     getUsersList();
-  }, []);
+  }, [userEmail]);
 
-  const openModal = () => setModalIsOpen(true);
+  const openModal = (user) => {
+    setSelectedUser(user)
+    setModalIsOpen(true);
+  }
   const closeModal = () => setModalIsOpen(false);
   const closeEditProfileModal = () => setEditProfileModalOpen(false)
   return (
@@ -150,7 +166,7 @@ export const HomeComponent = () => {
               </div>
               <button
                 className="flex-1 text-center bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-green-600 hover:font-bold transition duration-300"
-                onClick={openModal}
+                onClick={()=> openModal(user.email)}
               >
                 Pay
               </button>
@@ -192,7 +208,7 @@ export const HomeComponent = () => {
             </svg>
           </button>
           <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-          
+          onClick={() => handlePay(amount , selectedUser)}
           
           >
             Pay

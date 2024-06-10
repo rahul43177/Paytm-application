@@ -32,14 +32,24 @@ module.exports.transfer = async (req,res) => {
 
         session.startTransaction()
 
-        const {amount , to } = req.body
-        
-        const senderDetails = req.user
+        let {  amount , to , from } = req.body
+        amount = Number(amount)
+        if(amount == NaN) {
+            return res.status(400).json({
+                status : false , 
+                message : "Please enter valid Amount"
+            })
+        }
+
+        console.log("user details " , req.user)
+        const senderDetails = await userModel.findOne({
+            email : from
+        })
         const userId = senderDetails.id 
         const accountOfSender = await Account.findOne({
             user : userId
         })
-        if(!accountOfSender || accountOfSender.balance > amount ) {
+        if(!accountOfSender || accountOfSender.balance < amount ) {
             await session.abortTransaction()
             return res.status(400).json({
                 status : false ,
@@ -47,7 +57,7 @@ module.exports.transfer = async (req,res) => {
             })
         }
 
-        const toUser = await userModel.fineOne({
+        const toUser = await userModel.findOne({
             email : to
         })
         const toUserId = toUser._id
@@ -95,6 +105,60 @@ module.exports.transfer = async (req,res) => {
         return res.status(500).json({
             status : false , 
             error : error, 
+            errorMessage : error.message
+        })
+    }
+}
+
+
+module.exports.updateFunds = async (req,res) => {
+    try {
+
+        let {userEmail , amount } = req.body
+
+        amount = Number(amount)
+        if(amount <= 0 || isNaN(amount)) {
+            return res.status(400).json({
+                status : false , 
+                message : "Please enter a valid Number"
+            })
+        }
+
+
+        const user = await userModel.findOne({
+            email : userEmail
+        }) 
+
+        if(!user) {
+            return res.status(404).json({
+                status : false , 
+                message : "user not found"
+            })
+        }
+
+        const userId = user._id 
+        const balanceUpdate = await Account.updateOne(
+            {
+                user : userId 
+            } , 
+            {
+                $inc : {
+                    balance : amount
+                }
+            } ,
+            {
+                new : true
+            }
+        )
+
+        return res.status(201).json({
+            status : true , 
+            message : "The amount has been udpated"
+        })
+    } catch(error) {
+        return res.status(500).json({
+            status : false ,
+            error : error , 
             errorMessage : error.message
         })
     }
