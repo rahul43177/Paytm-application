@@ -11,12 +11,12 @@ export const HomeComponent = () => {
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [editProfileModalOpen , setEditProfileModalOpen] = useState(false)
+  const [editProfileModalOpen, setEditProfileModalOpen] = useState(false);
   const userName = localStorage.getItem("name");
   const userEmail = localStorage.getItem("email");
-  const [amount , setAmount ] = useState("")
-  const [balance , setBalance] = useState(0)
-  const [selectedUser , setSelectedUser] = useState("")
+  const [amount, setAmount] = useState("");
+  const [balance, setBalance] = useState(0);
+  const [selectedUser, setSelectedUser] = useState("");
   const handleLogout = async () => {
     try {
       const response = await axios.get(`http://localhost:3030/user/logout`, {
@@ -36,51 +36,49 @@ export const HomeComponent = () => {
   };
 
   const handleAddFunds = () => {
-    navigate("/addFunds")
-}
+    navigate("/addFunds");
+  };
   const handleEditProfile = () => {
-    setEditProfileModalOpen(true)
-  }
-  const handlePay = async (amount , to ) => {
-    try { 
+    setEditProfileModalOpen(true);
+  };
+  const handlePay = async (amount, to) => {
+    try {
       let paymentResponse = await axios.post(
-        'http://localhost:3030/transfer/transaction' , 
+        "http://localhost:3030/transfer/transaction",
         {
-          amount , to , 
-          from : userEmail
+          amount,
+          to,
+          from: userEmail,
         }
-      
-       )  
+      );
 
-       console.log(paymentResponse)
-       if(paymentResponse.status = 200) toast.success(paymentResponse.data.message)
-       else toast.error(error.response.data.error)
-
-    } catch(error) {
-      console.log("error ----" , error)
+      console.log(paymentResponse);
+      if ((paymentResponse.status = 200)) {
+        toast.success(paymentResponse.data.message);
+      } 
+    } catch (error) {
+      toast.error(error.response.data.message)
     }
-  }
+  };
 
-  useEffect(()=> {
+  useEffect(() => {
     const getBalance = async () => {
-      try { 
+      try {
         const balanceResponse = await axios.post(
-          "http://localhost:3030/account/getBalance" , 
+          "http://localhost:3030/account/getBalance",
           {
-            userEmail : userEmail
-          } 
-        )
+            userEmail: userEmail,
+          }
+        );
 
-        setBalance(balanceResponse.data.balance.balance )
-      } catch(error) {
-        toast.error(error.response.data.message)
+        setBalance(balanceResponse.data.balance.balance);
+      } catch (error) {
+        toast.error(error.response.data.message);
       }
-    }
+    };
 
-    getBalance()
-  },[userEmail])
-
-
+    getBalance();
+  }, [userEmail]);
 
   useEffect(() => {
     const getUsersList = async () => {
@@ -104,11 +102,11 @@ export const HomeComponent = () => {
   }, [userEmail]);
 
   const openModal = (user) => {
-    setSelectedUser(user)
+    setSelectedUser(user);
     setModalIsOpen(true);
-  }
+  };
   const closeModal = () => setModalIsOpen(false);
-  const closeEditProfileModal = () => setEditProfileModalOpen(false)
+  const closeEditProfileModal = () => setEditProfileModalOpen(false);
   return (
     <>
       <div className="flex items-center justify-between p-4">
@@ -139,11 +137,12 @@ export const HomeComponent = () => {
         </button>
       </div>
       <div className="absolute right-20">
-        <div className="font-bold text-2xl mb-4 text-black" 
-            style={{
-              marginRight: "64px" , 
-              marginTop: "-20px"
-            }}  
+        <div
+          className="font-bold text-2xl mb-4 text-black"
+          style={{
+            marginRight: "64px",
+            marginTop: "-20px",
+          }}
         >
           Balance: <span className="text-green-500">{balance}</span>
         </div>
@@ -166,7 +165,7 @@ export const HomeComponent = () => {
               </div>
               <button
                 className="flex-1 text-center bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-green-600 hover:font-bold transition duration-300"
-                onClick={()=> openModal(user.email)}
+                onClick={() => openModal(user.email)}
               >
                 Pay
               </button>
@@ -207,23 +206,25 @@ export const HomeComponent = () => {
               />
             </svg>
           </button>
-          <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-          onClick={() => handlePay(amount , selectedUser)}
-          
+          <button
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => handlePay(amount, selectedUser)}
           >
             Pay
           </button>
         </div>
       </Modal>
       <Modal
-  isOpen={editProfileModalOpen}
-  onRequestClose={closeEditProfileModal}
-  className="bg-white rounded-lg shadow-lg max-w-md mx-auto my-8 p-6 absolute pt-10"
-  overlayClassName="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center"
->
-  <h2 className="text-3xl font-bold text-center mt-2 mb-8">Edit Profile</h2>
-  <div className="flex space-x-4">
-  <button
+        isOpen={editProfileModalOpen}
+        onRequestClose={closeEditProfileModal}
+        className="bg-white rounded-lg shadow-lg max-w-md mx-auto my-8 p-6 absolute pt-10"
+        overlayClassName="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center"
+      >
+        <h2 className="text-3xl font-bold text-center mt-2 mb-8">
+          Edit Profile
+        </h2>
+        <div className="flex space-x-4">
+          <button
             onClick={closeEditProfileModal}
             className="absolute top-3 right-3 text-gray-600 hover:text-red-500 transition duration-300"
           >
@@ -242,21 +243,20 @@ export const HomeComponent = () => {
               />
             </svg>
           </button>
-    <button
-      onClick={handleEditPassword}
-      className="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    >
-      Change Password
-    </button>
-    <button
-      onClick={handleAddFunds}
-      className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-    >
-      Add Funds
-    </button>
-  </div>
-</Modal>
-
+          <button
+            onClick={handleEditPassword}
+            className="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Change Password
+          </button>
+          <button
+            onClick={handleAddFunds}
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Add Funds
+          </button>
+        </div>
+      </Modal>
     </>
   );
 };
