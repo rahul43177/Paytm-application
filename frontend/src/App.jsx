@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { LoginRegistrationComponent } from "./components/Registration_login";
 import { ToastContainer } from "react-toastify";
 import { HomeComponent } from "./components/HomeComponent";
+
 import {
   BrowserRouter as Router,
   Routes,
@@ -12,6 +13,7 @@ import {
 import "./index.css"; // Import your Tailwind CSS
 import axios from "axios";
 import { EditPassword } from "./components/EditPassword";
+import { AddFunds } from "./components/AddFunds";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -20,9 +22,12 @@ function App() {
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
-        const response = await axios.get(`http://localhost:3030/user/loginCheck`, {
-          withCredentials: true,
-        });
+        const response = await axios.get(
+          `http://localhost:3030/user/loginCheck`,
+          {
+            withCredentials: true,
+          }
+        );
         localStorage.setItem("email", response.data.userData.email);
         localStorage.setItem("role", response.data.userData.role);
         setIsLoggedIn(response.data.loggedIn);
@@ -57,7 +62,7 @@ function App() {
           element={isLoggedIn ? <HomeComponent /> : <Navigate to="/" />}
         />
         <Route path="/editPassword" element={<EditPassword />} />
-        {console.log(isLoggedIn)}
+        <Route path="/addFunds" element={<AddFunds />} />
       </Routes>
       <ToastContainer
         position="top-center"
